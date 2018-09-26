@@ -1,0 +1,42 @@
+<idea-plugin>
+    <id>com.xingxunlei.plugin</id>
+    <name>Maven Project Version Change</name>
+    <version>1.0</version>
+    <vendor email="xingxunlei@126.com" url="http://www.zzylm.com">SimonX</vendor>
+
+    <description><![CDATA[
+      Maven Project Version Change
+      <p>使用时需要先关闭已经打开的 pom.xml 文件编辑器</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="MavenProjectVersion Change" class="com.xingxunlei.plugin.MavenVersionChangeAction" text="Maven Project Version Change"
+                description="Maven Project Version Change plugin">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+
+    <application-components>
+        <component>
+            <implementation-class>com.xingxunlei.plugin.component.MavenVersionChangeComponent</implementation-class>
+        </component>
+    </application-components>
+</idea-plugin>

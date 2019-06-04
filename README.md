@@ -1,5 +1,6 @@
 # MavenParentVersionChange
 统一修改Maven Project Version
+***有兴趣的可以下载源码 & pull request***
 
 # 使用事项
 使用时需要先关闭已经打开的 pom.xml 文件编辑器

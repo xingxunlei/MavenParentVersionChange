@@ -46,17 +46,20 @@ public class MavenVersionChangeAction extends AnAction {
 
         String basePath = project.getBasePath();
         if (Strings.isNullOrEmpty(basePath)) {
+            Messages.showDialog("未找到Project的工作路径, 请检查", "Warn", new String[]{}, -1, Messages.getWarningIcon());
             return;
         }
 
         List<String> poms = CommonUtils.getPomFiles(basePath);
         if (CollectionUtils.isEmpty(poms)) {
+            Messages.showDialog("未找到pom文件, 请检查", "Warn", new String[]{}, -1, Messages.getWarningIcon());
             return;
         }
 
         Document parentPomDocument = CommonUtils.getPomDocument(poms.get(0));
         String parentPomVersion = CommonUtils.getPomVersion(parentPomDocument);
         if (Strings.isNullOrEmpty(parentPomVersion)) {
+            Messages.showDialog("根目录下的pom文件中未找到version节点, 请检查pom文件", "Warn", new String[]{}, -1, Messages.getWarningIcon());
             return;
         }
 
@@ -72,17 +75,28 @@ public class MavenVersionChangeAction extends AnAction {
         basePath = poms.get(0).replace(Constants.POM_FILE_NAME, "");
 
         Map<String, String> parentPomPropertiesMap = CommonUtils.getPomPropertiesNodeMap(parentPomDocument);
-        List<String> subModuleList = CommonUtils.getSubModuleList(parentPomDocument);
-        for (String module : subModuleList) {
-            String modulePath = basePath + module + File.separator + Constants.POM_FILE_NAME;
-            Document moduleDocument = CommonUtils.getPomDocument(modulePath);
-            updatePomVersion(newVersion, subModuleList, moduleDocument, parentPomPropertiesMap);
-            writeNewPomFile(moduleDocument, modulePath);
-        }
+
+        eachUpdateModulePomVersion(basePath, parentPomDocument, parentPomPropertiesMap, newVersion);
 
         updatePomPropertiesNode(parentPomDocument, parentPomPropertiesMap);
         writeNewPomFile(parentPomDocument, poms.get(0));
+
         refreshActiveEditor(project);
+    }
+
+    private void eachUpdateModulePomVersion(String path, Document parentPomDocument, Map<String, String> parentPomPropertiesMap, String version) {
+        List<String> subModuleList = CommonUtils.getSubModuleList(parentPomDocument);
+        for (String module : subModuleList) {
+            String modulePath = path + module + File.separator + Constants.POM_FILE_NAME;
+            Document moduleDocument = CommonUtils.getPomDocument(modulePath);
+            updateModulePomVersion(version, subModuleList, moduleDocument, parentPomPropertiesMap);
+            writeNewPomFile(moduleDocument, modulePath);
+
+            if (CommonUtils.getSubModuleList(moduleDocument).size() > 0) {
+                eachUpdateModulePomVersion(modulePath.replace(Constants.POM_FILE_NAME, ""), moduleDocument, parentPomPropertiesMap, version);
+            }
+
+        }
     }
 
     private void updateRootPomVersion(String newVersion, Document document) {
@@ -98,7 +112,7 @@ public class MavenVersionChangeAction extends AnAction {
         }
     }
 
-    private void updatePomVersion(String newVersion, List<String> subModuleList, Document document, Map<String, String> parentPomPropertiesMap) {
+    private void updateModulePomVersion(String newVersion, List<String> subModuleList, Document document, Map<String, String> parentPomPropertiesMap) {
         Element rootElement = document.getRootElement();
         if (null == rootElement) {
             return;

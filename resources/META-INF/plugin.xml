@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.xingxunlei.plugin</id>
     <name>Maven Project Version Change</name>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <vendor email="xingxunlei@126.com" url="http://www.zzylm.com">SimonX</vendor>
 
     <description><![CDATA[

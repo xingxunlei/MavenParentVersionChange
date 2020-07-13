@@ -24,22 +24,6 @@ import java.util.Map;
  * @date 2018/9/25
  */
 public class CommonUtils {
-    private static List<String> files = new ArrayList<>();
-
-    /**
-     * 判断文件是否存在
-     *
-     * @param path 文件路径
-     * @return
-     */
-    public static boolean isExistFile(String path) {
-        if (Strings.isNullOrEmpty(path)) {
-            return false;
-        }
-
-        File file = new File(path);
-        return file.exists();
-    }
 
     /**
      * 获取pom文件列表
@@ -57,8 +41,7 @@ public class CommonUtils {
             return Lists.newArrayList();
         }
 
-        listPomFile(file);
-        return files;
+        return listPomFile(file);
     }
 
     /**
@@ -146,14 +129,15 @@ public class CommonUtils {
         return result;
     }
 
-    private static void listPomFile(File file) {
+    private static List<String> listPomFile(File file) {
         File[] files = file.listFiles();
         if (files == null) {
-            return;
+            return Lists.newArrayList();
         }
 
         LinkedList<File> list = new LinkedList<>();
-        addFilePath(files, list);
+        List<String> outs = Lists.newArrayList();
+        addFilePath(files, list, outs);
 
         while (!list.isEmpty()) {
             File tmp = list.removeFirst();
@@ -163,12 +147,14 @@ public class CommonUtils {
                     continue;
                 }
 
-                addFilePath(files, list);
+                addFilePath(files, list, outs);
             }
         }
+
+        return outs;
     }
 
-    private static void addFilePath(File[] files, LinkedList<File> list) {
+    private static void addFilePath(File[] files, LinkedList<File> list, List<String> outs) {
         for (File f : files) {
             if (f.isDirectory()) {
                 list.add(f);
@@ -176,7 +162,7 @@ public class CommonUtils {
             if (!Constants.POM_FILE_NAME.equals(f.getName())) {
                 continue;
             }
-            CommonUtils.files.add(f.getAbsolutePath());
+            outs.add(f.getAbsolutePath());
         }
     }
 

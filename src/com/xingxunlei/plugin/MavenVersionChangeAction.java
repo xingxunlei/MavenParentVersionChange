@@ -39,6 +39,7 @@ public class MavenVersionChangeAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
+
         Project project = e.getProject();
         if (null == project) {
             return;
@@ -57,6 +58,10 @@ public class MavenVersionChangeAction extends AnAction {
         }
 
         Document parentPomDocument = CommonUtils.getPomDocument(poms.get(0));
+        if (parentPomDocument == null) {
+            return;
+        }
+
         String parentPomVersion = CommonUtils.getPomVersion(parentPomDocument);
         if (Strings.isNullOrEmpty(parentPomVersion)) {
             Messages.showDialog("根目录下的pom文件中未找到version节点, 请检查pom文件", "Warn", new String[]{}, -1, Messages.getWarningIcon());
@@ -89,6 +94,10 @@ public class MavenVersionChangeAction extends AnAction {
         for (String module : subModuleList) {
             String modulePath = path + module + File.separator + Constants.POM_FILE_NAME;
             Document moduleDocument = CommonUtils.getPomDocument(modulePath);
+            if (moduleDocument == null) {
+                return;
+            }
+
             updateModulePomVersion(version, subModuleList, moduleDocument, parentPomPropertiesMap);
             writeNewPomFile(moduleDocument, modulePath);
 

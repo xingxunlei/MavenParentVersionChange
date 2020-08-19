@@ -6,7 +6,7 @@
 使用时需要先关闭已经打开的 pom.xml 文件编辑器
 
 # 下载&安装
-下载[MavenParentVersionChange.jar](https://github.com/xingxunlei/MavenParentVersionChange/releases/download/1.0.2/MavenParentVersionChange.jar)到本地，然后在idea中选择 install plugin from disk...安装完成后重启idea
+下载[MavenParentVersionChange.jar](https://github.com/xingxunlei/MavenParentVersionChange/releases/download/1.0.3/MavenParentVersionChange.jar)到本地，然后在idea中选择 install plugin from disk...安装完成后重启idea
 
 # 使用方法
 1. 选中外层project

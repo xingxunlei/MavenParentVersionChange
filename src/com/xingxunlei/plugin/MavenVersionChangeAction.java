@@ -252,14 +252,21 @@ public class MavenVersionChangeAction extends AnAction {
                 versions.forEach(element1 -> {
                     String version = element1.getValue();
                     version = (null == version) ? "" : version.trim();
-                    if (version.startsWith(Constants.POM_NODE_VERSION_EL_EXPRESSION_PREFIX)) {
-                        version = parseELExpressionVersion(version);
-                        if (pomPropertiesNodeMap.containsKey(version)) {
-                            pomPropertiesNodeMap.put(version, newVersion);
-                            return;
-                        }
+
+                    if (version.contains(Constants.POM_NODE_PROJECT_VERSION)) {
+                        return;
                     }
-                    element1.setText(newVersion);
+
+                    if (!version.startsWith(Constants.POM_NODE_VERSION_EL_EXPRESSION_PREFIX)) {
+                        element1.setText(newVersion);
+                        return;
+                    }
+
+                    version = parseELExpressionVersion(version);
+                    if (pomPropertiesNodeMap.containsKey(version)) {
+                        pomPropertiesNodeMap.put(version, newVersion);
+                    }
+
                 });
             }
         }
